@@ -52,4 +52,9 @@ class User extends Authenticatable
             set: fn ($value) => Hash::make($value)
         );
     }
+
+    function workspaces()
+    {
+        return $this->hasMany(Workspace::class);
+    }
 }

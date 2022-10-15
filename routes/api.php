@@ -7,6 +7,10 @@ use Illuminate\Support\Facades\Route;
 // Auth
 use App\Http\Controllers\Auth\AuthController;
 
+// Workspace
+use App\Http\Controllers\Workspace\WorkspaceController;
+
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -18,11 +22,21 @@ use App\Http\Controllers\Auth\AuthController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+
+    Route::prefix('/workspaces')->group(function () {
+        Route::get('/', [WorkspaceController::class, 'index']);
+        Route::get('/{workspace}', [WorkspaceController::class, 'show']);
+        Route::post('/', [WorkspaceController::class, 'store']);
+        Route::patch('/{workspace}', [WorkspaceController::class, 'update']);
+        Route::delete('/{workspace}', [WorkspaceController::class, 'destroy']);
+    });
 });
 
-Route::prefix('/auth')->group(function () {
+Route::prefix('/auth')->middleware('guest')->group(function () {
     Route::post('/signup', [AuthController::class, 'store']);
     Route::post('/login', [AuthController::class, 'login']);
 });

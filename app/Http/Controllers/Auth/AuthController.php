@@ -15,16 +15,16 @@ class AuthController extends Controller
         $validated = $request->validated();
         $user = User::create($validated);
 
-        return response($user, 201);
+        return response()->json($user, 201);
     }
 
     function login(LoginRequest $request)
     {
         $validated = $request->validated();
-        if (!Auth::attempt($validated)) return response(['message' => 'The credentials are not valid'], 401);
+        if (!Auth::attempt($validated)) return response()->json(['message' => 'The credentials are not valid'], 401);
 
         $token = $request->user()->createToken('api');
 
-        return response(['message' => 'Login succesfully', 'data' => ['apiToken' => $token->plainTextToken]], 201);
+        return response()->json(['message' => 'Login successfully', 'data' => ['apiToken' => $token->plainTextToken]], 201);
     }
 }
