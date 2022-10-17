@@ -57,4 +57,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Workspace::class);
     }
+
+    function boards()
+    {
+        return $this->belongsToMany(Board::class)->as('members');
+    }
 }

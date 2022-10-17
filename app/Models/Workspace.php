@@ -23,4 +23,9 @@ class Workspace extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    function boards()
+    {
+        return $this->hasMany(Board::class);
+    }
 }

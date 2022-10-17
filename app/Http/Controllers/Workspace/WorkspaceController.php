@@ -7,7 +7,6 @@ use App\Http\Requests\Workspace\StoreWorkspaceRequest;
 use App\Http\Requests\Workspace\UpdateWorkspaceRequest;
 use App\Http\Resources\Workspace\WorkspaceResource;
 use App\Models\Workspace;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 class WorkspaceController extends Controller
@@ -58,12 +57,11 @@ class WorkspaceController extends Controller
      * @param  \App\Models\Workspace  $workspace
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, Workspace $workspace)
+    public function show(Request $request, int $id)
     {
-        if ($request->user()->id != $workspace->user_id) throw new ModelNotFoundException();
+        $workspace = Workspace::where(['id' => $id, 'user_id' => $request->user()->id])->firstOrFail();
 
         $includes = $request->query('includes') ?? [];
-
         $includes = is_array($includes) ? $includes : [$includes];
 
         $workspace->load($includes);
@@ -78,10 +76,9 @@ class WorkspaceController extends Controller
      * @param  \App\Models\Workspace  $workspace
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateWorkspaceRequest $request, Workspace $workspace)
+    public function update(UpdateWorkspaceRequest $request, int $id)
     {
-        if ($request->user()->id != $workspace->user_id) throw new ModelNotFoundException();
-
+        $workspace = Workspace::where(['id' => $id, 'user_id' => $request->user()->id])->firstOrFail();
         $validated = $request->validated();
 
         $workspace->title = $validated['title'] ?? $workspace->title;
@@ -97,12 +94,11 @@ class WorkspaceController extends Controller
      * @param  \App\Models\Workspace  $workspace
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, Workspace $workspace)
+    public function destroy(Request $request, int $id)
     {
-        if ($request->user()->id != $workspace->user_id) throw new ModelNotFoundException();
-
+        $workspace = Workspace::where(['id' => $id, 'user_id' => $request->user()->id])->firstOrFail();
         $workspace->delete();
 
-        return response()->json(['message' => 'Workspace deleted successfully', 'data' => $workspace]);
+        return response()->json(['message' => 'Workspace deleted successfully', 'data' => new WorkspaceResource($workspace)]);
     }
 }

@@ -47,7 +47,7 @@ class WorkspaceController extends TestCase
             'user_id' => $user->id
         ];
 
-        $response = $this->actingAs($user)->postJson("/api/workspaces", $data);
+        $response = $this->actingAs($user)->postJson('/api/workspaces', $data);
 
         $response
             ->assertStatus(201)

@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\UserRequest;
+use App\Http\Resources\User\UserResource;
 use App\Models\User;
 
 class AuthController extends Controller
@@ -15,7 +16,7 @@ class AuthController extends Controller
         $validated = $request->validated();
         $user = User::create($validated);
 
-        return response()->json($user, 201);
+        return new UserResource($user, 201);
     }
 
     function login(LoginRequest $request)
