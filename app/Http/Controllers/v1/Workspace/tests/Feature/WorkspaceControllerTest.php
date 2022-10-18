@@ -17,7 +17,7 @@ class WorkspaceController extends TestCase
         $user = User::factory()->create();
         Workspace::factory()->count(3)->for($user)->create();
 
-        $response = $this->actingAs($user)->getJson('/api/workspaces');
+        $response = $this->actingAs($user)->getJson('/api/v1/workspaces');
 
         $response
             ->assertStatus(200)
@@ -32,7 +32,7 @@ class WorkspaceController extends TestCase
             'title' => $workspaceTitle
         ]);
 
-        $response = $this->actingAs($user)->getJson("/api/workspaces/{$workspace->id}");
+        $response = $this->actingAs($user)->getJson("/api/v1/workspaces/{$workspace->id}");
 
         $response
             ->assertStatus(200)
@@ -47,7 +47,7 @@ class WorkspaceController extends TestCase
             'user_id' => $user->id
         ];
 
-        $response = $this->actingAs($user)->postJson('/api/workspaces', $data);
+        $response = $this->actingAs($user)->postJson('/api/v1/workspaces', $data);
 
         $response
             ->assertStatus(201)
@@ -67,7 +67,7 @@ class WorkspaceController extends TestCase
             'title' => 'Testing Workspace Updated'
         ];
 
-        $response = $this->actingAs($user)->patchJson("/api/workspaces/{$workspace->id}", $data);
+        $response = $this->actingAs($user)->patchJson("/api/v1/workspaces/{$workspace->id}", $data);
 
         $response
             ->assertStatus(200)
@@ -84,7 +84,7 @@ class WorkspaceController extends TestCase
         $user = User::factory()->create();
         $workspace = Workspace::factory()->for($user)->create();
 
-        $response = $this->actingAs($user)->delete("/api/workspaces/{$workspace->id}");
+        $response = $this->actingAs($user)->delete("/api/v1/workspaces/{$workspace->id}");
 
         $response->assertStatus(200);
         $this->assertSoftDeleted($workspace);

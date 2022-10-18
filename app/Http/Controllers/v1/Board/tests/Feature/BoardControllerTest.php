@@ -19,7 +19,7 @@ class BoardControllerTest extends TestCase
         $workspace = Workspace::factory()->for($user)->create();
         Board::factory()->count(3)->hasAttached($user)->create(['workspace_id' => $workspace->id]);
 
-        $response = $this->actingAs($user)->getJson('/api/boards');
+        $response = $this->actingAs($user)->getJson('/api/v1/boards');
 
         $response
             ->assertStatus(200)
@@ -34,7 +34,7 @@ class BoardControllerTest extends TestCase
         $boardTitle = 'Test board title';
         $board = Board::factory()->hasAttached($user)->create(['title' => $boardTitle, 'workspace_id' => $workspace->id]);
 
-        $response = $this->actingAs($user)->getJson("/api/boards/{$board->id}");
+        $response = $this->actingAs($user)->getJson("/api/v1/boards/{$board->id}");
 
         $response
             ->assertStatus(200)
@@ -47,7 +47,7 @@ class BoardControllerTest extends TestCase
         $workspace = Workspace::factory()->for($user)->create();
         $data = ['title' => 'Test board title', 'workspace_id' => $workspace->id];
 
-        $response = $this->actingAs($user)->postJson('/api/boards', $data);
+        $response = $this->actingAs($user)->postJson('/api/v1/boards', $data);
 
         $response
             ->assertStatus(201)
@@ -66,7 +66,7 @@ class BoardControllerTest extends TestCase
         $board = Board::factory()->hasAttached($user)->create(['workspace_id' => $workspace->id]);
         $data = ['title' => 'Test board title'];
 
-        $response = $this->actingAs($user)->patchJson("/api/boards/{$board->id}", $data);
+        $response = $this->actingAs($user)->patchJson("/api/v1/boards/{$board->id}", $data);
 
         $response
             ->assertStatus(200)
@@ -79,7 +79,7 @@ class BoardControllerTest extends TestCase
         $workspace = Workspace::factory()->for($user)->create();
         $board = Board::factory()->hasAttached($user)->create(['workspace_id' => $workspace->id]);
 
-        $response = $this->actingAs($user)->deleteJson("/api/boards/{$board->id}");
+        $response = $this->actingAs($user)->deleteJson("/api/v1/boards/{$board->id}");
 
         $response->assertStatus(200);
         $this->assertSoftDeleted($board);
