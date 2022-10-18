@@ -21,12 +21,14 @@ class ResponseMetadata
         $response = $next($request);
 
         if ($response instanceof JsonResponse) {
+            $statusCode = $response->getStatusCode();
             $newJson = [
-                'timestamp' => now()->toDateTimeString(),
-                'ip' => $request->ip()
+                'datetime' => now()->toDateTimeString(),
+                'timestamp' => now()->toTimeString(),
+                'ip' => $request->ip(),
+                'statusCode' => $statusCode
             ];
             $oldJson = json_decode($response->getContent(), true);
-            $statusCode = $response->getStatusCode();
 
             $newJson['message'] = $oldJson['message'] ?? Response::$statusTexts[$statusCode];
 

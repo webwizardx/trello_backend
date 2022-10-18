@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Illuminate\Support\Str;
 
 class Handler extends ExceptionHandler
 {
@@ -52,10 +53,15 @@ class Handler extends ExceptionHandler
     public function render($request, $e)
     {
         if ($e instanceof ModelNotFoundException) {
+            $model = (string) $e->getModel();
+            $model = explode('\\', $model);
+            $model = Str::of(end($model))->singular();
             $data = [
-                'timestamp' => now()->toDateTimeString(),
+                'datetime' => now()->toDateTimeString(),
+                'timestamp' => now()->toTimeString(),
                 'ip' => $request->ip(),
-                'message' => 'Not Found'
+                'message' => "$model not found",
+                'statusCode' => 404
             ];
 
             return response()->json($data, 404);
