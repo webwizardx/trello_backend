@@ -21,7 +21,7 @@ class ListsControllerTest extends TestCase
         $board = Board::factory()->hasAttached($user)->create(['workspace_id' => $workspace->id]);
         Lists::factory()->count(3)->create(['board_id' => $board->id]);
 
-        $response = $this->actingAs($user)->getJson("/api/boards/{$board->id}/lists");
+        $response = $this->actingAs($user)->getJson("/api/v1/boards/{$board->id}/lists");
 
         $response
             ->assertStatus(200)
@@ -36,7 +36,7 @@ class ListsControllerTest extends TestCase
         $listTitle = 'Test List title';
         $lists = Lists::factory()->create(['title' => $listTitle, 'board_id' => $board->id]);
 
-        $response = $this->actingAs($user)->getJson("/api/lists/{$lists->id}");
+        $response = $this->actingAs($user)->getJson("/api/v1/lists/{$lists->id}");
 
         $response
             ->assertStatus(200)
@@ -50,7 +50,7 @@ class ListsControllerTest extends TestCase
         $board = Board::factory()->hasAttached($user)->create(['workspace_id' => $workspace->id]);
         $data = ['title' => 'Test List title', 'board_id' => $board->id];
 
-        $response = $this->actingAs($user)->postJson('/api/lists/', $data);
+        $response = $this->actingAs($user)->postJson('/api/v1/lists/', $data);
 
         $response
             ->assertStatus(201)
@@ -70,7 +70,7 @@ class ListsControllerTest extends TestCase
         $data = ['title' => 'Test List title updated'];
         $lists = Lists::factory()->create(['board_id' => $board->id]);
 
-        $response = $this->actingAs($user)->patchJson("/api/lists/{$lists->id}", $data);
+        $response = $this->actingAs($user)->patchJson("/api/v1/lists/{$lists->id}", $data);
 
         $response
             ->assertStatus(200)
@@ -87,7 +87,7 @@ class ListsControllerTest extends TestCase
         $board = Board::factory()->hasAttached($user)->create(['workspace_id' => $workspace->id]);
         $lists = Lists::factory()->create(['board_id' => $board->id]);
 
-        $response = $this->actingAs($user)->deleteJson("/api/lists/{$lists->id}");
+        $response = $this->actingAs($user)->deleteJson("/api/v1/lists/{$lists->id}");
 
         $response->assertStatus(200);
         $this->assertSoftDeleted($lists);

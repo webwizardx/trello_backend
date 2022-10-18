@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Lists;
+namespace App\Http\Controllers\v1\Lists;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Lists\StoreListsRequest;

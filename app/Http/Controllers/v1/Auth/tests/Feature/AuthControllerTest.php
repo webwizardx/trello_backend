@@ -20,7 +20,7 @@ class AuthTest extends TestCase
             'password' => $password
         ]);
 
-        $response = $this->postJson('/api/auth/login', [
+        $response = $this->postJson('/api/v1/auth/login', [
             "email" => $email,
             "password" => $password
         ]);
@@ -38,7 +38,7 @@ class AuthTest extends TestCase
             "password" => "password"
         ];
 
-        $response = $this->postJson('/api/auth/signup', $user);
+        $response = $this->postJson('/api/v1/auth/signup', $user);
 
         $response
             ->assertStatus(201)

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Workspace;
+namespace App\Http\Controllers\v1\Workspace;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Workspace\StoreWorkspaceRequest;

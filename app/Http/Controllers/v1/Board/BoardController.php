@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Board;
+namespace App\Http\Controllers\v1\Board;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Board\StoreBoardRequest;
