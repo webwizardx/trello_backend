@@ -86,7 +86,7 @@ class WorkspaceController extends TestCase
 
         $response = $this->actingAs($user)->delete("/api/workspaces/{$workspace->id}");
 
-        $response
-            ->assertStatus(200);
+        $response->assertStatus(200);
+        $this->assertSoftDeleted($workspace);
     }
 }

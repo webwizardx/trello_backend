@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Board;
+namespace App\Http\Requests\Lists;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateBoardRequest extends FormRequest
+class UpdateListsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,7 +25,7 @@ class UpdateBoardRequest extends FormRequest
     {
         return [
             'title' => 'string',
-            'workspace_id' => 'numeric|exists:workspaces,id'
+            'board_id' => 'numeric|exists:boards,id'
         ];
     }
 }

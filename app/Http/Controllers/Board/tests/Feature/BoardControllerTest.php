@@ -81,7 +81,7 @@ class BoardControllerTest extends TestCase
 
         $response = $this->actingAs($user)->deleteJson("/api/boards/{$board->id}");
 
-        $response
-            ->assertStatus(200);
+        $response->assertStatus(200);
+        $this->assertSoftDeleted($board);
     }
 }
