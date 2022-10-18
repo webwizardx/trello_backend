@@ -9,8 +9,10 @@ use App\Http\Resources\User\UserResource;
 use App\Http\Controllers\Auth\AuthController;
 // Workspace
 use App\Http\Controllers\Workspace\WorkspaceController;
-//Board
+// Board
 use App\Http\Controllers\Board\BoardController;
+// Lists
+use App\Http\Controllers\Lists\ListsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,6 +43,16 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/', [BoardController::class, 'store']);
         Route::patch('/{id}', [BoardController::class, 'update']);
         Route::delete('/{id}', [BoardController::class, 'destroy']);
+
+        // Lists
+        Route::get('/{id}/lists', [ListsController::class, 'index']);
+    });
+
+    Route::prefix('/lists')->group(function () {
+        Route::get('/{id}', [ListsController::class, 'show']);
+        Route::post('/', [ListsController::class, 'store']);
+        Route::patch('/{id}', [ListsController::class, 'update']);
+        Route::delete('/{id}', [ListsController::class, 'destroy']);
     });
 });
 

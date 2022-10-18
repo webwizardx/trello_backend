@@ -25,7 +25,7 @@ class StoreBoardRequest extends FormRequest
     {
         return [
             'title' => 'string|required',
-            'workspace_id' => 'exists:workspaces,id|required'
+            'workspace_id' => 'numeric|exists:workspaces,id|required'
         ];
     }
 }
