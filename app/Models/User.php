@@ -63,4 +63,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Board::class)->as('members');
     }
+
+    function todos()
+    {
+        return $this->belongsToMany(Todo::class);
+    }
 }
