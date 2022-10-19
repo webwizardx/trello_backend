@@ -9,6 +9,8 @@ use Illuminate\Http\Response;
 
 class ResponseMetadata
 {
+    const MESSAGE = 'MESSAGE';
+
     /**
      * Handle an incoming request.
      *
@@ -30,9 +32,9 @@ class ResponseMetadata
             ];
             $oldJson = json_decode($response->getContent(), true);
 
-            $newJson['message'] = $oldJson['message'] ?? Response::$statusTexts[$statusCode];
+            $newJson['message'] = $oldJson[ResponseMetadata::MESSAGE] ?? Response::$statusTexts[$statusCode];
 
-            unset($oldJson['message']);
+            unset($oldJson[ResponseMetadata::MESSAGE]);
 
             if ($statusCode < 400) {
                 if (isset($oldJson['data'])) {

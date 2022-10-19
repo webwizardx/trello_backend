@@ -19,7 +19,8 @@ class DatabaseSeeder extends Seeder
             WorkspaceSeeder::class,
             BoardSeeder::class,
             ListsSeeder::class,
-            TodoSeeder::class
+            TodoSeeder::class,
+            CommentSeeder::class
         ]);
     }
 }

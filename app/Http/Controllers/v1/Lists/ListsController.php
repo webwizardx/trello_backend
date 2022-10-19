@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\v1\Lists;
 
 use App\Http\Controllers\Controller;
+use App\Http\Middleware\ResponseMetadata;
 use App\Http\Requests\Lists\StoreListsRequest;
 use App\Http\Requests\Lists\UpdateListsRequest;
 use App\Http\Resources\Lists\ListsResource;
@@ -26,8 +27,7 @@ class ListsController extends Controller
 
         $query = $user->boards()->findOrFail($id);
         $query = $query->lists();
-
-        if (in_array('board', $includes)) $query = $query->with(['board']);
+        $query = $query->with($includes);
 
         if ($page) {
             $query = $query->paginate($perPage);
@@ -110,6 +110,6 @@ class ListsController extends Controller
 
         $lists->delete();
 
-        return response()->json(['message' => 'List deleted successfully', 'data' => new ListsResource($lists)]);
+        return response()->json([ResponseMetadata::MESSAGE => 'List deleted successfully', 'data' => new ListsResource($lists)]);
     }
 }

@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\v1\Todo;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreTodoRequest;
-use App\Http\Requests\UpdateTodoRequest;
+use App\Http\Middleware\ResponseMetadata;
+use App\Http\Requests\Todo\StoreTodoRequest;
+use App\Http\Requests\Todo\UpdateTodoRequest;
 use App\Http\Resources\Todo\TodoResource;
 use App\Models\Lists;
 use App\Models\Todo;
@@ -28,8 +29,7 @@ class TodoController extends Controller
         $query = Lists::findOrFail($id);
         $query->board()->whereRelation('users', 'user_id', $request->user()->id)->firstOrFail();
         $query = $query->todos();
-
-        if (in_array('list', $includes)) $query = $query->with(['list']);
+        $query = $query->with($includes);
 
         if ($page) {
             $query = $query->paginate($perPage);
@@ -125,7 +125,7 @@ class TodoController extends Controller
 
             DB::commit();
 
-            return response()->json(['message' => 'Todo deleted successfully', 'data' => new TodoResource($todo)]);
+            return response()->json([ResponseMetadata::MESSAGE => 'Todo deleted successfully', 'data' => new TodoResource($todo)]);
         } catch (\Throwable $th) {
             DB::rollBack();
             throw $th;

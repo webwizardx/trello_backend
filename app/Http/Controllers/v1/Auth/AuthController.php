@@ -4,6 +4,7 @@ namespace App\Http\Controllers\v1\Auth;
 
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Http\Middleware\ResponseMetadata;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\UserRequest;
 use App\Http\Resources\User\UserResource;
@@ -27,7 +28,7 @@ class AuthController extends Controller
 
         $token = $request->user()->createToken('api');
 
-        return response()->json(['message' => 'Login successfully', 'data' => ['apiToken' => $token->plainTextToken]], 201);
+        return response()->json([ResponseMetadata::MESSAGE => 'Login successfully', 'data' => ['apiToken' => $token->plainTextToken]], 201);
     }
 
     function logout(Request $request)
@@ -36,6 +37,6 @@ class AuthController extends Controller
 
         if (!$deleted) return response()->json(['message' => 'Token not found', 404]);
 
-        return response()->json(['message' => 'Logout successfully'], 200);
+        return response()->json([ResponseMetadata::MESSAGE => 'Logout successfully'], 200);
     }
 }

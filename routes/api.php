@@ -16,6 +16,8 @@ use App\Http\Controllers\v1\Board\BoardController as BoardControllerV1;
 use App\Http\Controllers\v1\Lists\ListsController as ListsControllerV1;
 // Todo
 use App\Http\Controllers\v1\Todo\TodoController as TodoControllerV1;
+// Comment
+use App\Http\Controllers\v1\Comment\CommentController as CommentControllerV1;
 
 /*
 |--------------------------------------------------------------------------
@@ -67,6 +69,16 @@ Route::prefix('/v1')->group(function () {
             Route::post('/', [TodoControllerV1::class, 'store']);
             Route::patch('/{id}', [TodoControllerV1::class, 'update']);
             Route::delete('/{id}', [TodoControllerV1::class, 'destroy']);
+
+            // Comments
+            Route::get('/{id}/comments', [CommentControllerV1::class, 'index']);
+        });
+
+        Route::prefix('/comments')->group(function () {
+            Route::get('/{id}', [CommentControllerV1::class, 'show']);
+            Route::post('/', [CommentControllerV1::class, 'store']);
+            Route::patch('/{id}', [CommentControllerV1::class, 'update']);
+            Route::delete('/{id}', [CommentControllerV1::class, 'destroy']);
         });
     });
 
