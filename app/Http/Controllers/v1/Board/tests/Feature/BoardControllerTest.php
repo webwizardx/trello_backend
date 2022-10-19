@@ -17,7 +17,7 @@ class BoardControllerTest extends TestCase
     {
         $user = User::factory()->create();
         $workspace = Workspace::factory()->for($user)->create();
-        Board::factory()->count(3)->hasAttached($user)->create(['workspace_id' => $workspace->id]);
+        Board::factory()->count(3)->hasAttached($user)->for($workspace)->create();
 
         $response = $this->actingAs($user)->getJson('/api/v1/boards');
 
@@ -32,7 +32,7 @@ class BoardControllerTest extends TestCase
         $user = User::factory()->create();
         $workspace = Workspace::factory()->for($user)->create();
         $boardTitle = 'Test board title';
-        $board = Board::factory()->hasAttached($user)->create(['title' => $boardTitle, 'workspace_id' => $workspace->id]);
+        $board = Board::factory()->hasAttached($user)->for($workspace)->create(['title' => $boardTitle]);
 
         $response = $this->actingAs($user)->getJson("/api/v1/boards/{$board->id}");
 
@@ -63,7 +63,7 @@ class BoardControllerTest extends TestCase
     {
         $user = User::factory()->create();
         $workspace = Workspace::factory()->for($user)->create();
-        $board = Board::factory()->hasAttached($user)->create(['workspace_id' => $workspace->id]);
+        $board = Board::factory()->hasAttached($user)->for($workspace)->create();
         $data = ['title' => 'Test board title'];
 
         $response = $this->actingAs($user)->patchJson("/api/v1/boards/{$board->id}", $data);
@@ -77,7 +77,7 @@ class BoardControllerTest extends TestCase
     {
         $user = User::factory()->create();
         $workspace = Workspace::factory()->for($user)->create();
-        $board = Board::factory()->hasAttached($user)->create(['workspace_id' => $workspace->id]);
+        $board = Board::factory()->hasAttached($user)->for($workspace)->create();
 
         $response = $this->actingAs($user)->deleteJson("/api/v1/boards/{$board->id}");
 
