@@ -52,4 +52,17 @@ class AuthTest extends TestCase
                     ->etc()
             );
     }
+
+    public function test_get_logout()
+    {
+        $user = User::factory()->create();
+        $token = $user->createToken('api');
+        $headers = [
+            'Authorization' => "Bearer {$token->plainTextToken}"
+        ];
+
+        $response = $this->withHeaders($headers)->getJson('/api/v1/auth/logout');
+
+        $response->assertStatus(200);
+    }
 }

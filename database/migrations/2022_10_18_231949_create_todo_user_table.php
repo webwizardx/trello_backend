@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('table_todo_user');
+        Schema::dropIfExists('todo_user');
     }
 };

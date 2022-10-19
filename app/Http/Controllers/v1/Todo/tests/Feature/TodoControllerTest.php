@@ -21,7 +21,7 @@ class TodoController extends TestCase
         $workspace = Workspace::factory()->for($user)->create();
         $board = Board::factory()->hasAttached($user)->for($workspace)->create();
         $lists = Lists::factory()->for($board)->create();
-        Todo::factory()->count(3)->for($lists, 'list')->create();
+        Todo::factory()->count(3)->hasAttached($user)->for($lists, 'list')->create();
 
         $response = $this->actingAs($user)->getJson("/api/v1/lists/{$lists->id}/todos");
 
@@ -37,7 +37,7 @@ class TodoController extends TestCase
         $board = Board::factory()->hasAttached($user)->for($workspace)->create();
         $lists = Lists::factory()->for($board)->create();
         $todoTitle = 'Test Todo title';
-        $todo = Todo::factory()->for($lists, 'list')->create(['title' => $todoTitle]);
+        $todo = Todo::factory()->hasAttached($user)->for($lists, 'list')->create(['title' => $todoTitle]);
 
         $response = $this->actingAs($user)->getJson("/api/v1/todos/{$todo->id}");
 
@@ -98,7 +98,7 @@ class TodoController extends TestCase
         $workspace = Workspace::factory()->for($user)->create();
         $board = Board::factory()->hasAttached($user)->for($workspace)->create();
         $lists = Lists::factory()->for($board)->create();
-        $todo = Todo::factory()->for($lists, 'list')->create();
+        $todo = Todo::factory()->hasAttached($user)->for($lists, 'list')->create();
 
         $response = $this->actingAs($user)->deleteJson("/api/v1/todos/{$todo->id}");
 

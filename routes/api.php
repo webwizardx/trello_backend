@@ -70,8 +70,11 @@ Route::prefix('/v1')->group(function () {
         });
     });
 
-    Route::prefix('/auth')->middleware('guest')->group(function () {
-        Route::post('/signup', [AuthControllerV1::class, 'store']);
-        Route::post('/login', [AuthControllerV1::class, 'login']);
+    Route::prefix('/auth')->group(function () {
+        Route::middleware('guest')->group(function () {
+            Route::post('/signup', [AuthControllerV1::class, 'store']);
+            Route::post('/login', [AuthControllerV1::class, 'login']);
+        });
+        Route::middleware('auth:sanctum')->get('/logout', [AuthControllerV1::class, 'logout']);
     });
 });

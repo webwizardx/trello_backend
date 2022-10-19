@@ -9,6 +9,7 @@ use App\Http\Resources\Todo\TodoResource;
 use App\Models\Lists;
 use App\Models\Todo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TodoController extends Controller
 {
@@ -47,10 +48,21 @@ class TodoController extends Controller
      */
     public function store(StoreTodoRequest $request)
     {
-        $validated = $request->validated();
-        $todo = Todo::create($validated);
+        try {
+            DB::beginTransaction();
 
-        return new TodoResource($todo);
+            $userId = $request->user()->id;
+            $validated = $request->validated();
+            $todo = Todo::create($validated);
+            $todo->users()->attach($userId);
+
+            DB::commit();
+
+            return new TodoResource($todo);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw $th;
+        }
     }
 
     /**
@@ -102,11 +114,21 @@ class TodoController extends Controller
      */
     public function destroy(Request $request, int $id)
     {
-        $todo = Todo::findOrFail($id);
-        $todo->list()->first()->board()->whereRelation('users', 'user_id', $request->user()->id)->firstOrFail();
+        try {
+            DB::beginTransaction();
 
-        $todo->delete();
+            $todo = Todo::findOrFail($id);
+            $todo->list()->first()->board()->whereRelation('users', 'user_id', $request->user()->id)->firstOrFail();
 
-        return response()->json(['message' => 'Todo deleted successfully', 'data' => new TodoResource($todo)]);
+            $todo->users()->detach();
+            $todo->delete();
+
+            DB::commit();
+
+            return response()->json(['message' => 'Todo deleted successfully', 'data' => new TodoResource($todo)]);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            throw $th;
+        }
     }
 }

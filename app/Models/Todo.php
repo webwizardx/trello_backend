@@ -20,4 +20,9 @@ class Todo extends Model
     {
         return $this->belongsTo(Lists::class, 'list_id');
     }
+
+    function users()
+    {
+        return $this->belongsToMany(User::class);
+    }
 }
