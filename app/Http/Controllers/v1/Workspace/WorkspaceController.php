@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\v1\Workspace;
 
 use App\Http\Controllers\Controller;
+use App\Http\Middleware\ResponseMetadata;
 use App\Http\Requests\Workspace\StoreWorkspaceRequest;
 use App\Http\Requests\Workspace\UpdateWorkspaceRequest;
 use App\Http\Resources\Workspace\WorkspaceResource;
@@ -18,15 +19,13 @@ class WorkspaceController extends Controller
      */
     public function index(Request $request)
     {
-        $userId = $request->user()->id;
         $perPage = $request->query('perPage') ?? 15;
         $page = $request->query('page') ?? null;
         $includes = $request->query('includes') ?? [];
         $includes = is_array($includes) ? $includes : [$includes];
 
-        $query = Workspace::where('user_id', $userId);
-
-        if (in_array('user', $includes)) $query = $query->with(['user']);
+        $query = Workspace::where('user_id', $request->user()->id);
+        $query = $query->with($includes);
 
         if ($page) {
             $query = $query->paginate($perPage);
@@ -99,6 +98,6 @@ class WorkspaceController extends Controller
         $workspace = Workspace::where(['id' => $id, 'user_id' => $request->user()->id])->firstOrFail();
         $workspace->delete();
 
-        return response()->json(['message' => 'Workspace deleted successfully', 'data' => new WorkspaceResource($workspace)]);
+        return response()->json([ResponseMetadata::MESSAGE => 'Workspace deleted successfully', 'data' => new WorkspaceResource($workspace)]);
     }
 }

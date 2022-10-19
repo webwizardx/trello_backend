@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\v1\Board;
 
 use App\Http\Controllers\Controller;
+use App\Http\Middleware\ResponseMetadata;
 use App\Http\Requests\Board\StoreBoardRequest;
 use App\Http\Requests\Board\UpdateBoardRequest;
 use App\Http\Resources\Board\BoardResource;
@@ -26,9 +27,7 @@ class BoardController extends Controller
         $includes = is_array($includes) ? $includes : [$includes];
 
         $query = $user->boards();
-
-        if (in_array('user', $includes)) $query = $query->with(['users']);
-        if (in_array('workspace', $includes)) $query = $query->with(['workspace']);
+        $query = $query->with($includes);
 
         if ($page) {
             $query = $query->paginate($perPage);
@@ -48,13 +47,12 @@ class BoardController extends Controller
     public function store(StoreBoardRequest $request)
     {
         try {
-            $userId = $request->user()->id;
             $validated = $request->validated();
 
             DB::beginTransaction();
 
             $board = Board::create($validated);
-            $board->users()->attach($userId);
+            $board->users()->attach($request->user()->id);
 
             DB::commit();
 
@@ -73,14 +71,12 @@ class BoardController extends Controller
      */
     public function show(Request $request, int $id)
     {
+        $board = Board::where(['id' => $id])->whereRelation('users', 'user_id', $request->user()->id)->firstOrFail();;
+
         $includes = $request->query('includes') ?? [];
         $includes = is_array($includes) ? $includes : [$includes];
-        $query = Board::where(['id' => $id])->whereRelation('users', 'user_id', $request->user()->id);
 
-        if (in_array('user', $includes)) $query = $query->with(['users']);
-        if (in_array('workspace', $includes)) $query = $query->with(['workspace']);
-
-        $board = $query->firstOrFail();
+        $board->load($includes);
 
         return new BoardResource($board);
     }
@@ -121,7 +117,7 @@ class BoardController extends Controller
 
             DB::commit();
 
-            return response()->json(['message' => 'Board deleted successfully', 'data' => new BoardResource($board)]);
+            return response()->json([ResponseMetadata::MESSAGE => 'Board deleted successfully', 'data' => new BoardResource($board)]);
         } catch (\Throwable $th) {
             DB::rollBack();
             throw $th;

@@ -25,4 +25,9 @@ class Todo extends Model
     {
         return $this->belongsToMany(User::class);
     }
+
+    function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
 }

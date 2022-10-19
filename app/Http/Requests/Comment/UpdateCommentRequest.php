@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Comment;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreTodoRequest extends FormRequest
+class UpdateCommentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,8 @@ class StoreTodoRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'string|required',
-            'description' => 'string',
-            'list_id' => 'numeric|exists:lists,id|required'
+            'message' => 'string',
+            'todo_id' => 'numeric|exists:todos,id'
         ];
     }
 }
