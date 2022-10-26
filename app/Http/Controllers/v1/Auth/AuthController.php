@@ -26,9 +26,17 @@ class AuthController extends Controller
         $validated = $request->validated();
         if (!Auth::attempt($validated)) return response()->json(['message' => 'The credentials are not valid'], 401);
 
-        $token = $request->user()->createToken('api');
+        $user = $request->user();
+        $token = $user->createToken('api');
 
-        return response()->json([ResponseMetadata::MESSAGE => 'Login successfully', 'data' => ['apiToken' => $token->plainTextToken]], 201);
+        return response()
+            ->json([
+                ResponseMetadata::MESSAGE => 'Login successfully',
+                'data' => [
+                    'apiToken' => $token->plainTextToken,
+                    'user' => new UserResource($user)
+                ]
+            ], 201);
     }
 
     function logout(Request $request)

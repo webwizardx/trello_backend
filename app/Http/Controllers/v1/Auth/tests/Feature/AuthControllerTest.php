@@ -15,7 +15,7 @@ class AuthTest extends TestCase
     {
         $email = 'john@test.com';
         $password = 'password';
-        User::factory()->create([
+        $user = User::factory()->create([
             'email' => $email,
             'password' => $password
         ]);
@@ -25,7 +25,14 @@ class AuthTest extends TestCase
             "password" => $password
         ]);
 
-        $response->assertStatus(201);
+        $response
+            ->assertStatus(201)
+            ->assertJson(
+                fn (AssertableJson $json) =>
+                $json->where('data.user.email', $user['email'])
+                    ->missing('data.user.password')
+                    ->etc()
+            );
     }
 
     public function test_post_signup()
