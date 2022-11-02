@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Workspace;
 
+use App\Http\Resources\Board\BoardResource;
 use App\Http\Resources\User\UserResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Resources\MissingValue;
@@ -20,7 +21,8 @@ class WorkspaceResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'user_id' => $this->when($this->whenLoaded('user') instanceof MissingValue, $this->user_id),
-            'user' => new UserResource($this->whenLoaded('user'))
+            'user' => new UserResource($this->whenLoaded('user')),
+            'boards' => BoardResource::collection($this->whenLoaded('boards'))
         ];
     }
 }
