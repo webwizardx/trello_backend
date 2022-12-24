@@ -100,7 +100,7 @@ class TodoController extends Controller
 
         $todo->title = $validated['title'] ?? $todo->title;
         $todo->description = $validated['description'] ?? $todo->description;
-        $todo->list_id = $validated['board_id'] ?? $todo->list_id;
+        $todo->list_id = $validated['list_id'] ?? $todo->list_id;
         $todo->save();
 
         return new TodoResource($todo);
