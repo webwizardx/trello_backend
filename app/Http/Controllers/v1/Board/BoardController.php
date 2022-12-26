@@ -23,10 +23,12 @@ class BoardController extends Controller
         $user = $request->user();
         $perPage = $request->query('perPage') ?? 15;
         $page = $request->query('page') ?? null;
+        $orderBy = $request->query('orderBy') ?? 'created_at';
+        $order = $request->query('order') ?? 'ASC';
         $includes = $request->query('includes') ?? [];
         $includes = is_array($includes) ? $includes : [$includes];
 
-        $query = $user->boards();
+        $query = $user->boards()->orderBy($orderBy, $order);
         $query = $query->with($includes);
 
         if ($page) {
